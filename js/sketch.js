@@ -13,6 +13,7 @@ function draw() {
     background(0);
 
     for (let bird of flock) {
+        bird.edges();
         bird.flock(flock);
         bird.update();
         bird.show();
