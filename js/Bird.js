@@ -1,9 +1,42 @@
 class Bird {
     constructor() {
-        this.position = createVector(width / 2, height / 2);
+        this.position = createVector(random(width), random(height));
         this.velocity = p5.Vector.random2D();
-        this.velocity.setMag(random(0.5, 1.5));
+        this.velocity.setMag(random(2, 4));
         this.acceleration = createVector();
+        this.maxForce = 0.1;
+    }
+
+    align(birds) {
+        // align only with birds that you can see
+        let perceptionRadius = 50;
+        // calculate neighbors average velocity
+        let steering = createVector();
+        let total = 0;
+        for (let bird of birds) {
+            let d = dist(this.position.x, this.position.y, bird.position.x, bird.position.y);
+            if (d < perceptionRadius && bird !== this) {
+                steering.add(bird.velocity);
+                total++;
+            }
+        }
+        if (total > 0) {
+            // get average neighbors velocity
+            steering.div(total);
+            // calculate steering force
+            steering.sub(this.velocity);
+            // limit steering force
+            steering.limit(this.maxForce);
+        }
+        // return steering force
+        return steering;
+    }
+
+    flock(birds) {
+        // calculate alignment force
+        let alignment = this.align(birds);
+        // apply alignment
+        this.acceleration = alignment;;
     }
 
     update() {
