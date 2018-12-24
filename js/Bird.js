@@ -4,7 +4,8 @@ class Bird {
         this.velocity = p5.Vector.random2D();
         this.velocity.setMag(random(2, 4));
         this.acceleration = createVector();
-        this.maxForce = 0.01;
+        this.maxForce = 0.1;
+        this.maxSpeed = 5;
     }
 
     edges() {
@@ -36,6 +37,8 @@ class Bird {
         if (total > 0) {
             // get average neighbors velocity
             steering.div(total);
+            // set speed
+            steering.setMag(this.maxSpeed);
             // calculate steering force
             steering.sub(this.velocity);
             // limit steering force
