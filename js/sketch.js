@@ -1,14 +1,19 @@
+const flockSize = 100;
+
 let flock = [];
 
 function setup() {
     createCanvas(600, 400);
-    flock.push(new Bird());
+    for (let i = 0; i < flockSize; i++){
+        flock.push(new Bird());
+    }
 }
 
 function draw() {
     background(0);
 
     for (let bird of flock) {
+        bird.update();
         bird.show();
     }
 
