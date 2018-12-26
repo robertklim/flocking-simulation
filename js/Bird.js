@@ -112,6 +112,12 @@ class Bird {
         let cohesion = this.cohesion(birds);
         // calculate separation force
         let separation = this.separation(birds);
+
+        // scale forces
+        alignment.mult(alignmentSlider.value());
+        cohesion.mult(cohesionSlider.value());
+        separation.mult(separationSlider.value());
+
         // use add to apply all forces
         this.acceleration.add(alignment);
         this.acceleration.add(cohesion);
