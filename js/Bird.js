@@ -1,3 +1,12 @@
+// todo:
+// 1. make a snapshot than calculate forces
+// 2. optimize (don't check current bird with all the others)
+// 3. interface (perception, maxForce, maxSpeed)
+// 4. birds with diff parameters
+// 5. change perception shape (now bird can see all thats around it)
+// 6. add obstacles
+// 7. add predator?
+
 class Bird {
     constructor() {
         this.position = createVector(random(width), random(height));
