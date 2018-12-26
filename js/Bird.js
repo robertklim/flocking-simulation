@@ -4,7 +4,7 @@ class Bird {
         this.velocity = p5.Vector.random2D();
         this.velocity.setMag(random(2, 4));
         this.acceleration = createVector();
-        this.maxForce = 0.1;
+        this.maxForce = 0.2;
         this.maxSpeed = 5;
     }
 
@@ -76,14 +76,46 @@ class Bird {
         return steering;
     }
 
+    // avoid crowding neighbours(short range repulsion)
+    separation(birds) {
+        let perceptionRadius = 50;
+        let steering = createVector();
+        let total = 0;
+        for (let bird of birds) {
+            let d = dist(this.position.x, this.position.y, bird.position.x, bird.position.y);
+            if (d < perceptionRadius && bird !== this) {
+                let diff = p5.Vector.sub(this.position, bird.position);
+                // closer you are to the neighbor stronger the repulsion
+                diff.div(d);
+                steering.add(diff);
+                total++;
+            }
+        }
+        if (total > 0) {
+            // get average neighbors velocity
+            steering.div(total);
+            // set speed
+            steering.setMag(this.maxSpeed);
+            // calculate steering force
+            steering.sub(this.velocity);
+            // limit steering force
+            steering.limit(this.maxForce);
+        }
+        // return steering force
+        return steering;
+    }
+
     flock(birds) {
         // calculate alignment force
         let alignment = this.align(birds);
         // calculate cohesion force
         let cohesion = this.cohesion(birds);
-        // use add to apply both forces
+        // calculate separation force
+        let separation = this.separation(birds);
+        // use add to apply all forces
         this.acceleration.add(alignment);
         this.acceleration.add(cohesion);
+        this.acceleration.add(separation);
     }
 
     update() {
